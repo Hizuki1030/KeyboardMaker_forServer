@@ -1,0 +1,237 @@
+.icon{
+    display: flex;
+    flex-direction: row;
+}
+
+.selectToolsMenu {
+    display: flex;
+    flex-direction: row;
+    margin-right: 2%;
+    margin-left: 2%;
+}
+
+.toolImage{
+    width: 50%;
+    height: auto;
+    margin-right: 2%;
+    margin-left: 2%;
+    position: relative;
+    
+}
+
+.toolImage img{
+    width: 100%;
+    border-radius: 5px;
+    -webkit-transition: all .3s; transition: all .3s;
+    
+}
+
+.toolImage img:hover{
+    opacity: 0.6;  filter: brightness(110%); 
+}
+.toolImage p{
+    text-align: center;
+    position: absolute;/*絶対配置*/
+    color: white;/*文字は白に*/
+    transform: translate(-50%,-50%);
+    top: 42%;
+    left: 50%;
+    font-size: 200%;
+    }
+
+.icon img{
+    width: 5%;
+    margin-bottom: 0;
+    margin-left: 5%;
+    left: 50%;
+    margin-top:1%;
+}
+
+.icon{
+    margin       : auto;
+    width        : 100%;
+    
+}
+
+
+.whatiskeyboardmaker{
+    /*border-bottom: solid 3px #87CEFA;*/
+    font-size: 150%;
+}
+
+.explain{
+    text-align: center;
+}
+
+
+.example{
+    float: left;
+    width: 50%;
+    height:auto;
+}
+
+.example2{
+    height: auto;
+    float: right;
+    width: 50%;
+}
+.workflow {
+    font-size: 80%;
+    margin-left : auto ;
+    margin-right : auto ;
+    width: 60%;
+    padding: 0.5em 1em;
+    font-weight: bold;
+    color:black;/*文字色*/
+    background: white;
+    border: solid 3px white;/*#6091d3;線*/
+    border-radius: 10px;/*角の丸み*/
+}
+.workflowText{
+    text-align: center;
+    font-size: 150%;
+    margin-left : auto ;
+    margin-right : auto ;
+}
+
+.documentsButton{
+    width: 90%;
+    height: 50px;
+    border-radius: 25px;
+    margin-left : 5% ;
+    margin-right : 5% ;
+}
+
+
+
+.loopSlide {
+    position: relative;
+    display: flex;
+    flex-flow: row nowrap;
+    width: 100vw;
+    overflow: hidden;
+  }
+  .loopSlide ul {
+    padding: 0;
+    width: 100vw;
+    display: flex;
+    flex-shrink: 0;
+  }
+  .loopSlide ul:first-child {
+    animation: slide1 60s -30s linear infinite;
+  }
+  .loopSlide ul:last-child {
+    animation: slide2 60s linear infinite;
+  }
+  .loopSlide ul li {
+    display: inline-block;
+    width: 100%;
+    min-width: 150px;
+    margin-right: 20px;
+    list-style: none;
+    text-align: center;
+  }
+  .loopSlide ul li img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .loopSlide:hover ul {
+    animation-play-state: paused;
+  }
+  
+  @keyframes slide1 {
+    0% {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+  }
+  @keyframes slide2 {
+    0% {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-200%);
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+  body {
+    font-family: sans-serif;
+    font-size: 14px;
+  }
+  code {
+    background: #daf4ff;
+    padding: 0 0.2rem;
+    border-radius: 0.2rem;
+  }
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  .steps {
+    /* 連番カウンター名の定義 */
+    counter-reset: step-counter;
+    /* 縦棒との位置関係に必要 */
+    position: relative;
+    /* 縦棒と連番のためのスペースを左に確保 */
+    padding-left: 2rem; /* 連番(1.5rem) + 余白 */
+  }
+
+  .steps p{
+    font-size: 1rem;
+  }
+  /* 縦棒 */
+  .steps:before {
+    content: "";
+    /* 幅と色 */
+    background-color: #ccc;
+    width: 2px;
+    /* 位置 */
+    position: absolute;
+    top: 0.7rem; /* 円のwidthの半分 */
+    left: 0.7rem; /* 円のwidthの半分 */
+    height: calc(100% - 0.7rem); /* 100% - top */
+    /* 連番より後ろに表示するため */
+    z-index: 0;
+  }
+  .steps > h2 {
+    /* 連番カウンターを+1する */
+    counter-increment: step-counter;
+    /* 連番カウンターを垂直方向に中央揃えで表示する */
+    display: flex;
+    align-items: center;
+  }
+  /* ①②③など連番 */
+  .steps > h2:before {
+    /* 連番カウンターの値を表示する */
+    content: counter(step-counter);
+    /* フォントと色 */
+    background:#6091d3;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: normal;
+    /* 文字を中央に表示する */
+    line-height: 1.5rem;
+    text-align: center;
+    /* 円で表示する */
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 1.5rem;
+    /* .stepsでmargin-left +2rem したぶん左に戻す */
+    position: absolute;
+    left: 0;
+    /* 縦棒より手前に表示するため */
+    z-index: 1;
+  }
