@@ -21,7 +21,7 @@ def startMenu():
     name = "Hoge"
     return render_template('menu.html', title='flask test', name=name) #変更
 
-@app.route('/PCBeditor')
+@app.route('/PCBeditor/')
 def App():
     name = "Hoge"
     #return name
