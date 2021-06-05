@@ -21,11 +21,11 @@ def startMenu():
     name = "Hoge"
     return render_template('menu.html', title='flask test', name=name) #変更
 
-@app.route('/app/')
+@app.route('/PCBeditor/')
 def App():
     name = "Hoge"
     #return name
-    return render_template('index.html', title='flask test', name=name) #変更
+    return render_template('PCBeditor.html', title='flask test', name=name) #変更
 
 ## おまじない
 if __name__ == "__main__":
