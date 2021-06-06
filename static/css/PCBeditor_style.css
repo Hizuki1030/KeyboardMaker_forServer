@@ -31,8 +31,31 @@
     border: 0;  /*デフォルトデザインでは線がある場合があるので、消しておく。*/
   }
 
-.param input{
-    width: 50px
+#gridsize{
+    width: 20px
+}
+
+#input_coord_x{
+    width: 70px
+}
+
+#input_coord_y{
+    width: 70px
+}
+
+#input_degree{
+    width: 30px
+}
+
+
+#input_Bind_0{
+    width: 20px
+}
+#input_Bind_1{
+    width: 20px
+}
+#input_Bind_2{
+    width: 20px
 }
 
 .keySelect{

@@ -35,6 +35,30 @@
       <input type="number" id="input_coord_y"  value =0>
       <label  >angle[degree]:</label>
       <input type="number" id="input_degree"   value= 0>
+
+      <label >  BindMap:</label>
+      <input type="radio" id="map0"
+        name="BindMap" value="map0" onchange="updateMapNumRadio()" checked>
+      <label for="map0">1</label>
+  
+      <input type="radio" id="map1"
+        name="BindMap" value="map1"  onchange="updateMapNumRadio()">
+      <label for="map1">2</label>
+  
+      <input type="radio" id="map2"
+        name="BindMap" value="map2"  onchange="updateMapNumRadio()">
+      <label for="map2">3</label>
+
+      <label  >Bind1:</label>
+      <input type="text" id="input_Bind_0">
+
+      <label  >Bind2:</label>
+      <input type="text" id="input_Bind_1">
+
+      <label  >Bind3:</label>
+      <input type="text" id="input_Bind_2">
+
+
     <script type="text/javascript" src="{{ url_for('static', filename='js/PCBeditor.js')}}"></script>
     </div>
     <hr>

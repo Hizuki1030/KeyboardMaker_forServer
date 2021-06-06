@@ -57,11 +57,29 @@ var InputKeyCoordX = document.getElementById("input_coord_x");
 var InputKeyCoordY = document.getElementById("input_coord_y");
 var InputKeyAngle = document.getElementById("input_degree");
 
+
+
+var InputMapBindNum = document.getElementsByName("BindMap");
+
+var InputMapBind0 = document.getElementById("input_Bind_0");
+var InputMapBind1 = document.getElementById("input_Bind_1");
+var InputMapBind2 = document.getElementById("input_Bind_2");
+
+
+
+
+
 InputGridsize.addEventListener('change',drawGrid);
 SwitchShowGrid.addEventListener('change',drawGrid);
 InputKeyCoordX.addEventListener('change',changeElementInfo);
 InputKeyCoordY.addEventListener('change',changeElementInfo);
 InputKeyAngle.addEventListener('change',changeElementInfo);
+
+InputMapBind0.addEventListener('change',changeElementInfo);
+InputMapBind1.addEventListener('change',changeElementInfo);
+InputMapBind2.addEventListener('change',changeElementInfo);
+
+
 gridsize = Number(InputGridsize.value);
 
 
@@ -170,11 +188,13 @@ function addKey(data){
     .beginFill(0xffffff)
     .drawRoundedRect(-centerX,-centerY,key_width,key_height,2)
     .endFill()
-    
 
+    let text = new PIXI.Text('',{fontFamily : 'Arial', fontSize: 0.35*key_width, fill : 0x000000, align : 'center'});
+    text.anchor.set(0.5, 0.5);
     key.align='center'
 
     keyContainer.addChild(key);
+    keyContainer.addChild(text);
     
 
 
@@ -184,9 +204,14 @@ function addKey(data){
         .on('pointerupoutside', onDragEnd)
         .on('pointermove', onDragMove)
 
+
+    var MapBind = (new Array(3)).fill("");
+    var MapBind_array = [MapBind,MapBind,MapBind];
+    keyContainer.MapBind=MapBind_array;
     //keyContainersInfo = [keyContainerId,keyContainer,KeyType];
     keyContainer.name = KeyType;
     keyContainer.elementType = "key";
+    
     AllElement.push(keyContainer);
 
 
@@ -196,6 +221,7 @@ function addKey(data){
     keyContainer.y =y ;
     keyContainer.angle=angle;
     keyContainer.zIndex=10;
+    console.log(keyContainer)
 
 }
 
@@ -331,19 +357,22 @@ function Draw_Outline(data){//基板外形の描画処理
     outlineContainer.name = "outline";
     outlineContainer.elementType = "outline";
     AllElement.push(outlineContainer);
-
-
 }
+
 
 //canvas操作~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 function setSelectElement(targetElement){
     console.log("selected ElementName is "+targetElement.elementType);
 
     console.log(selectElement)
-    if(targetElement.elementType == "key" || targetElement.elementType == "computer"){
+    if(targetElement.elementType == "key"){
         InputKeyCoordX.value = convert_PXtoMM(targetElement.x)
         InputKeyCoordY.value = convert_PXtoMM(targetElement.y)
-        InputKeyAngle.value = targetElement.angle   
+        InputKeyAngle.value = targetElement.angle 
+    }else if(targetElement.elementType == "computer"){
+        InputKeyCoordX.value = convert_PXtoMM(targetElement.x)
+        InputKeyCoordY.value = convert_PXtoMM(targetElement.y)
+        InputKeyAngle.value = targetElement.angle 
     }else if(targetElement.elementType == "outline"){
     }else if(targetElement.elementType =="outline_dot"){
         console.log("called");
@@ -480,6 +509,27 @@ function deleteDragPoint(DragPoint){
     container.removeChild(DragPoint[1]);
 }
 
+function updateMapNumRadio(){//MapNumのradioボタンの変更時の処理
+    let selectNumBindMap;
+    let i;
+    for(i=0; i<3;i++){
+        if(InputMapBindNum.item(i).checked){
+            selectNumBindMap=i;
+        }
+    }
+
+    console.log(AllElement)
+    for(let elementdata of AllElement){
+        if(elementdata.elementType == "key"){
+            let ElementBind = elementdata.MapBind;
+            InputMapBind0.value = ElementBind[selectNumBindMap][0];
+            InputMapBind1.value = ElementBind[selectNumBindMap][1];
+            InputMapBind2.value = ElementBind[selectNumBindMap][2];
+            elementdata.children[1].text=ElementBind[selectNumBindMap][0];
+        }
+    }
+}
+
 function changeElementInfo(){
     console.log(selectElement.elementType)
     if(selectElement.elementType != "outline"){
@@ -493,7 +543,36 @@ function changeElementInfo(){
         console.log("selected ElementName is "+selectElement.elementType);
 
         console.log(selectElement)
-        if(selectElement.elementType == "key" || selectElement.elementType == "computer"){
+        if(selectElement.elementType == "key"){
+            let selectNumBindMap;
+            let i;
+
+
+            for(i=0; i<3;i++){
+                if(InputMapBindNum.item(i).checked){
+                    selectNumBindMap=i;
+                }
+            }
+
+            
+            let MapBind0 = InputMapBind0.value;
+            let MapBind1 = InputMapBind1.value;
+            let MapBind2 = InputMapBind2.value;
+
+            let X= convert_MMtoPX(InputKeyCoordX.value);
+            let Y= convert_MMtoPX(InputKeyCoordY.value);
+            let Angle= InputKeyAngle.value;
+            selectElement.x=X;
+            selectElement.y=Y;
+            selectElement.angle=Angle;
+            let selectElementBind = selectElement.MapBind;
+            selectElementBind[selectNumBindMap] = [MapBind0,MapBind1,MapBind2];
+            selectElement.MapBind = selectElementBind;
+            selectElement.children[1].text=MapBind0;
+            
+            console.log(selectElement.MapBind)
+            
+        }else if(selectElement.elementType == "computer"){
             let X= convert_MMtoPX(InputKeyCoordX.value);
             let Y= convert_MMtoPX(InputKeyCoordY.value);
             let Angle= InputKeyAngle.value;
@@ -567,19 +646,28 @@ function convertGrid(coord){
 //elementのイベント~~~~~~~~~~~~~~~~~~~~~~~~~
 let dX,dY
 function onDragStart(event) {
-    // store a reference to the data
-    // the reason for this is because of multitouch
-    // we want to track the movement of this particular touch
     selectElement=this;
     setSelectElement(this)
-    //KeyAngle = Number(InputKeyAngle.value);
-    //this.angle=KeyAngle;
+    if(selectElement.elementType == "key"){
+        let selectNumBindMap;
+        for(let i=0; i<3;i++){
+            if(InputMapBindNum.item(i).checked){
+                selectNumBindMap=i;
+            }
+        }
+        let ElementBind = selectElement.MapBind;
+        InputMapBind0.value = ElementBind[selectNumBindMap][0];
+        InputMapBind1.value = ElementBind[selectNumBindMap][1];
+        InputMapBind2.value = ElementBind[selectNumBindMap][2];
+    }
     this.data = event.data;
     this.alpha = 0.5;
     this.dragging = true;
     const startPosition = this.data.getLocalPosition(this.parent);
     dX = this.x - startPosition.x;//keyのX座標とクリックした座標の差を取る（キーをclickした時に位置が移動しないように）
     dY = this.y - startPosition.y;//keyのY座標とクリックした座標の差を取る（キーをclickした時に位置が移動しないように）
+
+
 }
 
 function onDragEnd() {
