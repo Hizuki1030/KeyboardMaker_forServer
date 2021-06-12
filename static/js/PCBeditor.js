@@ -132,27 +132,6 @@ function drawElement(file){
     }
 }
 
-function Exportfile(){
-    let elementsdata = AllElement
-    console.log("element data :  " +  elementsdata)
-    let StringElementData =""
-    for(let elementdata of elementsdata){
-        if(elementdata.elementType == "outline"){
-            let coords = elementdata.children[0].graphicsData[1].points;
-            console.log(elementdata);
-            StringElementData += "1" + "," + String(convert_PXtoMM(coords[0])) + "," + String(convert_PXtoMM(coords[1])) + "," + String(convert_PXtoMM(coords[2])) + "," + String(convert_PXtoMM(coords[3])) + "," + String(elementdata.angle) + "," + String(elementdata.name) + "\n";
-        }else if(elementdata.elementType == "key" || elementdata.elementType == "computer"){
-            StringElementData += "1" + "," + String(convert_PXtoMM(elementdata.x)) + "," + String(convert_PXtoMM(elementdata.y)) + "," + String(elementdata.angle) + "," + String(elementdata.name) + "\n";
-        }
-
-    }
-    console.log(StringElementData)
-    let blob = new Blob([StringElementData],{type:"text/plan"});
-    let link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'layout.csv';
-    link.click();
-}
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -189,9 +168,10 @@ function addKey(data){
     .drawRoundedRect(-centerX,-centerY,key_width,key_height,2)
     .endFill()
 
-    let text = new PIXI.Text('',{fontFamily : 'Arial', fontSize: 0.35*key_width, fill : 0x000000, align : 'center'});
+    let text = new PIXI.Text('',{fontFamily : 'Arial', fontSize: key_width, fill : 0x000000, align : 'center'});
     text.anchor.set(0.5, 0.5);
     key.align='center'
+    
 
     keyContainer.addChild(key);
     keyContainer.addChild(text);
@@ -525,7 +505,17 @@ function updateMapNumRadio(){//MapNumのradioボタンの変更時の処理
             InputMapBind0.value = ElementBind[selectNumBindMap][0];
             InputMapBind1.value = ElementBind[selectNumBindMap][1];
             InputMapBind2.value = ElementBind[selectNumBindMap][2];
-            elementdata.children[1].text=ElementBind[selectNumBindMap][0];
+
+            let text=InputMapBind0.value;
+            if(InputMapBind1.value !==""){
+                text += "\n"
+                text += InputMapBind1.value;
+            }
+            if(InputMapBind2.value !==""){
+                text += "\n"
+                text += InputMapBind2.value;
+            }
+            elementdata.children[1].text=text;
         }
     }
 }
@@ -558,6 +548,22 @@ function changeElementInfo(){
             let MapBind0 = InputMapBind0.value;
             let MapBind1 = InputMapBind1.value;
             let MapBind2 = InputMapBind2.value;
+            let MapBindMaxTextLength = Math.max(MapBind0.length,MapBind1.length,MapBind2.length);//文字サイズの決定のため、最大文字数取得
+            console.log("max is"+ String(MapBindMaxTextLength))
+            let text=MapBind0;
+            if(MapBind1 !==""){
+                text += "\n"
+                text += MapBind1;
+            }
+            if(MapBind2 !==""){
+                text += "\n"
+                text += MapBind2;
+            }
+
+
+
+            console.log("Key Text is :");
+            console.log(text);
 
             let X= convert_MMtoPX(InputKeyCoordX.value);
             let Y= convert_MMtoPX(InputKeyCoordY.value);
@@ -568,9 +574,18 @@ function changeElementInfo(){
             let selectElementBind = selectElement.MapBind;
             selectElementBind[selectNumBindMap] = [MapBind0,MapBind1,MapBind2];
             selectElement.MapBind = selectElementBind;
-            selectElement.children[1].text=MapBind0;
             
-            console.log(selectElement.MapBind)
+            let fontSize;
+            if(MapBindMaxTextLength >7){
+                fontSize = (selectElement.children[0].width *1.5)/MapBindMaxTextLength;
+            }else{
+                fontSize = (selectElement.children[0].width *0.25);
+            }
+            
+            
+            selectElement.children[1].style.fontSize=fontSize;
+            selectElement.children[1].text=text;
+            console.log(selectElement.children[0].width/MapBindMaxTextLength)
             
         }else if(selectElement.elementType == "computer"){
             let X= convert_MMtoPX(InputKeyCoordX.value);
