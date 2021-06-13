@@ -135,6 +135,7 @@
 
   .introPicture{
     width:50%;
+    height: auto;
     display:flex;
 
     
