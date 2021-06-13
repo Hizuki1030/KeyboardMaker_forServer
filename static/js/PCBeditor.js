@@ -141,20 +141,60 @@ function addKey(data){
     let x=convert_MMtoPX(canvasWidth_mm/2);
     let y=convert_MMtoPX(0);
     let angle=0;
+    let MapBind = (new Array(3)).fill("");
+    let MapBind_array = [MapBind,MapBind,MapBind];
+    
+
+    let key_width = convert_MMtoPX(keyWidth_mm);
+    let key_height = convert_MMtoPX(keyHeight_mm);
+    let fontSize=key_width *0.25;
+    let text_string;
+
     if(data != null){
+        let bind_array= data[0].split("_|_");
+        MapBind_array = [[bind_array[0],bind_array[1],bind_array[2]],[bind_array[3],bind_array[4],bind_array[5]],[bind_array[6],bind_array[7],bind_array[8]]]
         x=convert_MMtoPX(data[1]);
         y=convert_MMtoPX(data[2]);
+        
         angle=data[3]
-        ComputerType = data[4];
+        KeyType = data[4];
+
+        let indexMapNumRadio = getMapNumRadio();
+        let MapBind = MapBind_array[indexMapNumRadio];
+        let MapBindMaxTextLength = Math.max(MapBind);
+        
+        if(MapBindMaxTextLength >7){
+            fontSize = (key_width *1.5)/MapBindMaxTextLength;
+        }else{
+            fontSize = (key_width *0.25);
+        }
+
+        let MapBind0=MapBind[0];
+        let MapBind1=MapBind[1];
+        let MapBind2=MapBind[2];
+
+        InputMapBind0.value = MapBind0;
+        InputMapBind1.value = MapBind1;
+        InputMapBind2.value = MapBind2;
+
+        text_string=MapBind0;
+        if(MapBind1 !==""){
+            text_string += "\n"
+            text_string += MapBind1;
+        }
+        if(MapBind2 !==""){
+            text_string += "\n"
+            text_string += MapBind2;
+        }
     }
+
     keyContainerId++;
     var keyContainer = new PIXI.Container();
     keyContainer.interactive = true;
     keyContainer.buttonMode = true;
     app.stage.addChild(keyContainer);
 
-    let key_width = convert_MMtoPX(keyWidth_mm);
-    let key_height = convert_MMtoPX(keyHeight_mm);
+
     let centerX =key_width/2;
     let centerY =key_height/2;
     let key_lefttopX = centerX - key_width/2;
@@ -168,9 +208,10 @@ function addKey(data){
     .drawRoundedRect(-centerX,-centerY,key_width,key_height,2)
     .endFill()
 
-    let text = new PIXI.Text('',{fontFamily : 'Arial', fontSize: key_width, fill : 0x000000, align : 'center'});
+    let text = new PIXI.Text('',{fontFamily : 'Arial', fontSize: fontSize, fill : 0x000000, align : 'center'});
     text.anchor.set(0.5, 0.5);
     key.align='center'
+    text.text = text_string;
     
 
     keyContainer.addChild(key);
@@ -184,9 +225,6 @@ function addKey(data){
         .on('pointerupoutside', onDragEnd)
         .on('pointermove', onDragMove)
 
-
-    var MapBind = (new Array(3)).fill("");
-    var MapBind_array = [MapBind,MapBind,MapBind];
     keyContainer.MapBind=MapBind_array;
     //keyContainersInfo = [keyContainerId,keyContainer,KeyType];
     keyContainer.name = KeyType;
@@ -518,6 +556,17 @@ function updateMapNumRadio(){//MapNumのradioボタンの変更時の処理
             elementdata.children[1].text=text;
         }
     }
+}
+
+function getMapNumRadio(){
+    let selectNumBindMap;
+    let i;
+    for(i=0; i<3;i++){
+        if(InputMapBindNum.item(i).checked){
+            selectNumBindMap=i;
+        }
+    }
+    return selectNumBindMap;
 }
 
 function changeElementInfo(){

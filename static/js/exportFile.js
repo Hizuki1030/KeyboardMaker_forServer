@@ -9,7 +9,7 @@ function Exportfile(){
             StringElementData += "1" + "," + String(convert_PXtoMM(coords[0])) + "," + String(convert_PXtoMM(coords[1])) + "," + String(convert_PXtoMM(coords[2])) + "," + String(convert_PXtoMM(coords[3])) + "," + String(elementdata.angle) + "," + String(elementdata.name) + "\n";
         }else if(elementdata.elementType == "key"){
             let code  = getKeyBindData(elementdata);
-            let code_string = code.join(':')
+            let code_string = code.join('_|_')
             StringElementData += code_string + "," + String(convert_PXtoMM(elementdata.x)) + "," + String(convert_PXtoMM(elementdata.y)) + "," + String(elementdata.angle) + "," + String(elementdata.name) + "\n";
         }else if(elementdata.elementType == "computer"){
             StringElementData += "1" + "," + String(convert_PXtoMM(elementdata.x)) + "," + String(convert_PXtoMM(elementdata.y)) + "," + String(elementdata.angle) + "," + String(elementdata.name) + "\n";
@@ -29,7 +29,7 @@ function getKeyBindData(elementdata){
     let code_array =[];
     for(let i=0; i<3;i++){
         for(let j=0;j<3;j++){
-            code_array.push(changeCharToCode(ElementBind[i][j]));
+            code_array.push(ElementBind[i][j]);
         }
     }
     return code_array;
