@@ -19,13 +19,21 @@ def dated_url_for(endpoint, **values):
 @app.route('/')
 def startMenu():
     name = "Hoge"
-    return render_template('menu.html', title='flask test', name=name) #変更
+    return render_template('index.html', title='flask test', name=name) #変更
 
-@app.route('/PCBeditor/')
+@app.route('/app/')
+def a():
+    name = "Hoge"
+    #return name
+    return render_template('menu.html', title='flask test', name=name) #変更    
+
+@app.route('/app/PCBeditor/')
 def App():
     name = "Hoge"
     #return name
     return render_template('PCBeditor.html', title='flask test', name=name) #変更
+
+
 
 ## おまじない
 if __name__ == "__main__":
